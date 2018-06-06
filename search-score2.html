@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>search-score2</title>
+    <!-- 引入mdui-css -->
+    <link rel="stylesheet" href="css/mdui.css">
+    <!-- 个人css -->
+    <style>
+        #outer {
+            width: 370px;
+            height: 550px;
+        }
+        
+        #logo {
+            margin: auto;
+            width: 100%;
+        }
+        
+        #logo-outer {
+            width: 220px;
+            margin-top: 20px;
+        }
+        
+        #help {
+            position: absolute;
+        }
+        
+        #button {
+            font-size: 1.6em;
+            margin-top: 20px;
+            width: 88%;
+            height: 45px;
+        }
+        
+        #verification {
+            width: 40%;
+            float: right;
+            margin-bottom: 21px;
+            position: relative;
+            right: 18px;
+        }
+        
+        #code {
+            width: 100%;
+            display: block;
+            position: relative;
+            width: 40%;
+            margin: auto;
+            float: left;
+            text-align: center;
+            line-height: 45px;
+            font-size: 2em;
+            top: 30px;
+            left: 26px;
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-blue mdui-theme-accent-blue">
+    <div id="outer" class=" mdui-card mdui-container mdui-shadow-3 mdui-m-t-4 ">
+        <div id="logo-outer" class="mdui-container">
+            <img id="logo" src="img/广药.png">
+        </div>
+        <div class="mdui-textfield mdui-textfield-floating-label mdui-container">
+            <i class="mdui-icon material-icons">&#xe853;</i>
+            <label class="mdui-textfield-label">学号</label>
+            <input id="number" class="mdui-textfield-input" type="text" />
+        </div>
+        <div class=" mdui-textfield mdui-textfield-floating-label mdui-container">
+            <i class="mdui-icon material-icons">&#xe897;</i>
+            <label class="mdui-textfield-label">密码</label>
+            <input id="password" class="mdui-textfield-input" type="password" />
+        </div>
+        <span class="mdui-card " id="code">GDPU</span>
+        <div id="verification" class="mdui-textfield mdui-textfield-floating-label mdui-container">
+            <label class="mdui-textfield-label">验证码</label>
+            <input id="InputCode" class="mdui-textfield-input" type="text" />
+        </div>
+        <button id="button" class="mdui-color-theme mdui-color-blue mdui-color-theme-accent mdui-btn-block  mdui-ripple mdui-btn mdui-container  mdui-btn-raised mdui-text-color-white">查询</button>
+    </div>
+    <div id="searchResult">Search-result</div>
+
+    <!-- 引入js -->
+    <script src="js/jQuery.js"></script>
+    <script type="text/javascript" src="js/mdui.min.js"></script>
+    <!-- 我的js -->
+    <script>
+        $(document).ready(function() {
+            $("#button").click(function() {
+                $.ajax({
+                    type: "POST",
+                    url: "search-score2.php",
+                    dataType: "json",
+                    data: {
+                        "number": $("#number").val(),
+                        "password": $("#password").val(),
+                        "InputCode": $("#InputCode").val()
+                    },
+                    success: function(data) {
+                        $("#searchResult").html("success");
+                    },
+                    error: function(jqXHR) {
+                        $("#searchResult").html("error" + jqXHR.status);
+                    }
+                })
+            })
+        });
+    </script>
+</body>
+
+</html>

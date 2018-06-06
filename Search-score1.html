@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Search-score1</title>
+</head>
+
+<body>
+    <div>
+        <span>学号：</span><input type="text" id="number" /> <br>
+        <span>密码：</span><input type="password" id="password" /> <br>
+        <span>验证码：</span><input type="text" id="verification" /> <br>
+        <button id="submit">submit</button>
+    </div>
+    <div id="searchResult">searchResult</div>
+
+    <div id="searchResultFormat">
+        <table border="1">
+            <tr>
+                <th>姓名</th>
+                <th>学号</th>
+                <th>C语言</th>
+                <th>数据结构</th>
+                <th>高等数学</th>
+            </tr>
+            <tr>
+                <td>row1, cell1</td>
+                <td>row1, cell1</td>
+                <td>row1, cell1</td>
+                <td>row1, cell1</td>
+                <td>row1, cell1</td>
+            </tr>
+        </table>
+    </div>
+
+
+    <script src="js/jQuery.js">
+    </script>
+    <script>
+        $(document).ready(function() {
+            $("table").hide(); //隐藏表格
+            $("#submit").click(function() {
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: "search-score1.php",
+                    data: {
+                        "number": $("#number").val(),
+                        "password": $("#password").val(),
+                        "verification": $("#verification").val()
+                    },
+                    success: function(data) {
+                        $("#searchResult").html(data.msg);
+                        if (data.success) {
+                            $("table").show(); //出现表格
+                            //=======插入数据=============//
+                            $("td:eq(0)").html(data.name);
+                            $("td:eq(1)").html(data.number);
+                            $("td:eq(2)").html(data.C语言);
+                            $("td:eq(3)").html(data.数据结构);
+                            $("td:eq(4)").html(data.高等数学);
+                            //==========低于60分字体变红否则变黑============//
+                            if ($("td:eq(2)").text() < 60) {
+                                $("td:eq(2)").css("color", "red");
+                            } else {
+                                $("td:eq(2)").css("color", "black");
+                            }
+                            if ($("td:eq(3)").text() < 60) {
+                                $("td:eq(3)").css("color", "red");
+                            } else {
+                                $("td:eq(3)").css("color", "black");
+                            }
+                            if ($("td:eq(4)").text() < 60) {
+                                $("td:eq(4)").css("color", "red");
+                            } else {
+                                $("td:eq(4)").css("color", "black");
+                            }
+
+                        } else {
+                            $("table").hide();
+                            $("#searchResult").html(data.msg);
+                        }
+                    },
+                    error: function(jqXHR) {
+                        $("table").hide();
+                        $("#searchResult").html("error:" + jqXHR.status);
+                    }
+                })
+            })
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/jQuery.js">
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $("#button1").click(function() {
+                $.post("test.php", {
+                        name: "mike",
+                        city: "China"
+                    },
+                    function(data, status) {
+                        alert("数据：" + data + "\nstatus:" + status);
+                    });
+            });
+            $("#button2").click(function() {
+                $("p").removeClass("myclass");
+            })
+            $("#button3").click(function() {
+                $("p").toggleClass("myclass");
+            })
+        });
+    </script>
+    <title>Document</title>
+    <style>
+        * {
+            margin: 5px;
+        }
+        
+        #myDiv {
+            border: 2px solid red;
+        }
+        
+        .paragraph {
+            width: 300px;
+            vertical-align: center;
+            line-height: 300px;
+            background-color: aqua;
+            text-align: center;
+            position: relative;
+        }
+        
+        .myclass {
+            border: 2px solid blue;
+            font-size: 2em;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Staff Search</h1>
+    <lable>Please Input staff number: </lable>
+    <input type="text" id="keyword" />
+    <button id="search">search</button>
+    <p id="searchResult">Search result</p>
+
+    <h1>Staff Create</h1>
+    <label>Please Input staff name</label>
+    <input type="text" id="staffName" /><br/>
+    <label>Please Input staff id</label>
+    <input type="text" id="staffNumber" /><br/>
+    <label>Choose Staff Sex</label>
+    <select id="staffSex">
+        <option>Male</option>
+        <option>Female</option>
+    </select><br/>
+    <label>Please Input Staff job</label>
+    <input type="text" id="staffJob" /><br/>
+    <button id="save">save</button>
+    <p id="createResult">Create result</p>
+    <script>
+        document.getElementById("search").onclick = function() {
+            var request = new XMLHttpRequest();
+            request.open("GET", "test.php?number=" + document.getElementById("keyword").value);
+            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            request.send();
+            request.onreadystatechange = function() {
+                if (request.readyState == 4 && request.status == 200) {
+                    document.getElementById("searchResult").innerHTML = request.responseText;
+                }
+            }
+        }
+        document.getElementById("save").onclick = function() {
+            //sent request;
+            //================发送查询请求并且处理=================//
+            var request = new XMLHttpRequest();
+            //发送请求
+            //request.open("GET","test.php?number="+document.getElementById("keyword").value);
+            //GET方法的传递变量是直接在php后面?<变量>+
+            request.open("POST", "test.php");
+            var data = "name=" + document.getElementById("staffName").value +
+                "&number=" + document.getElementById("staffNumber").value +
+                "&sex=" + document.getElementById("staffSex").value +
+                "&job=" + document.getElementById("staffJob").value;
+
+            //重要:
+            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            //POST方法传递变量用字符串储存，变量之间用&隔开
+            request.send(data);
+            //
+            request.onreadystatechange = function() {
+                if (request.readyState === 4) {
+                    if (request.status == 200) {
+                        //查询结果
+                        //document.getElementById("searchResult").innerHTML=request.responseText;
+                        //创建结果
+                        document.getElementById("createResult").innerHTML = request.responseText;
+                    } else {
+                        alert("发生错误：" + request.status);
+                    }
+                }
+            }
+        }
+
+
+
+
+
+
+        // function search(str) {
+        //     var xmlhttp;
+        //     if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+        //         xmlhttp=new XMLHttpRequest();
+        //     } else {// code for IE6, IE5
+        //         xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        //     }
+        //     xmlhttp.onreadystatechange=function() {
+        //         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+        //                 document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+        //             }
+        //     }
+        //     xmlhttp.open("GET","test.php?name="+str,true);
+        //     xmlhttp.send();
+        // }
+    </script>
+</body>
+
+</html>

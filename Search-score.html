@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Search-score</title>
+
+</head>
+
+<body>
+    <div>
+        <h2>查分</h2>
+        <span>学号：</span><input type="text" id="number" /> <br>
+        <span>密码：</span><input type="password" id="password" /> <br>
+        <button id="submit">button</button>
+    </div>
+
+    <div id="status">结果</div>
+
+    <script src="js/jQuery.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#submit").click(function() {
+                $.ajax({
+                    type: "POST",
+                    url: "search-score.php",
+                    dataType: "json",
+                    data: { //其属性没有双引号
+                        number: $("#number").val(),
+                        password: $("#password").val()
+                    },
+                    success: function(data) {
+                        if (data.success) {
+                            $("#status").html(data.msg);
+                        } else {
+                            $("#status").html = "出现错误: " + data.msg;
+                        }
+                        $("#status").html(data.msg);
+                    },
+                    error: function(jqXHR) {
+                        alert("发生错误：" + jqXHR.status);
+                    }
+                });
+            })
+        })
+    </script>
+</body>
+
+</html>
