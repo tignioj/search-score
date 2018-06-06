@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>search-score2</title>
+    <title>外网查分</title>
     <!-- 引入mdui-css -->
     <link rel="stylesheet" href="css/mdui.css">
     <!-- 个人css -->
@@ -13,6 +13,12 @@
         #outer {
             width: 370px;
             height: 550px;
+        }
+        
+        .form {
+            width: 370px;
+            height: 550px;
+            background-color: aliceblue;
         }
         
         #logo {
@@ -56,12 +62,31 @@
             font-size: 2em;
             top: 30px;
             left: 26px;
+            text-decoration: line-through;
+        }
+        
+        #searchdate {
+            height: 400px;
+            border-radius: 10px;
+            background-color: white;
+        }
+        
+        #searchdate span {
+            text-align: center;
+            line-height: 30px;
+        }
+        
+        #searchResult {
+            position: absolute;
+            text-align: center;
+            width: 100%;
         }
     </style>
 </head>
 
 <body class="mdui-theme-primary-blue mdui-theme-accent-blue">
-    <div id="outer" class=" mdui-card mdui-container mdui-shadow-3 mdui-m-t-4 ">
+
+    <div id="outer" class=" mdui-card mdui-container mdui-shadow-3 mdui-m-t-2 ">
         <div id="logo-outer" class="mdui-container">
             <img id="logo" src="img/广药.png">
         </div>
@@ -75,6 +100,7 @@
             <label class="mdui-textfield-label">密码</label>
             <input id="password" class="mdui-textfield-input" type="password" />
         </div>
+        <div id="searchResult"></div>
         <span class="mdui-card " id="code">GDPU</span>
         <div id="verification" class="mdui-textfield mdui-textfield-floating-label mdui-container">
             <label class="mdui-textfield-label">验证码</label>
@@ -82,14 +108,46 @@
         </div>
         <button id="button" class="mdui-color-theme mdui-color-blue mdui-color-theme-accent mdui-btn-block  mdui-ripple mdui-btn mdui-container  mdui-btn-raised mdui-text-color-white">查询</button>
     </div>
-    <div id="searchResult">Search-result</div>
-
+    <div id="outer2" class="form mdui-card mdui-container mdui-shadow-3 mdui-m-y-4 ">
+        <div id="gbutton" class="mdui-container mdui-m-t-3">
+            <div class="mdui-row-xs-2">
+                <div class="mdui-col">
+                    <button id="button1" class="mdui-ripple mdui-btn mdui-btn-block mdui-color-theme-accent">button1</button>
+                </div>
+                <div class="mdui-col">
+                    <button id="button2" class="mdui-ripple mdui-btn mdui-btn-block mdui-color-theme-accent">button1</button>
+                </div>
+            </div>
+        </div>
+        <div id="searchdate" class="mdui-container mdui-m-t-3">
+            <div id="subject" class="mdui-container">
+                <span class="mdui-col-xs-6">科目</span>
+                <span class="mdui-col-xs-6">成绩</span>
+            </div>
+            <hr style="margin:0">
+            <div id="score1">
+                <span>C语言</span>
+                <span>成绩</span>
+            </div>
+            <div id="score2">
+                <span>数据结构</span>
+                <span>成绩</span>
+            </div>
+            <div id="score3">
+                <span>高等数学</span>
+                <span>成绩</span>
+            </div>
+        </div>
+        <div id="footer" class="mdui-float-right mdui-m-t-2">power by 校团委网络中心</div>
+    </div>
     <!-- 引入js -->
     <script src="js/jQuery.js"></script>
-    <script type="text/javascript" src="js/mdui.min.js"></script>
+    <script type="text/javascript " src="js/mdui.min.js "></script>
     <!-- 我的js -->
     <script>
         $(document).ready(function() {
+            $("#outer2").slideUp(0); //立即隐藏查询结果表格
+            $("#searchdate span").addClass("mdui-col-xs-6"); //插入Class
             $("#button").click(function() {
                 $.ajax({
                     type: "POST",
@@ -101,7 +159,35 @@
                         "InputCode": $("#InputCode").val()
                     },
                     success: function(data) {
-                        $("#searchResult").html("success");
+                        if (data.success) {
+                            $("#outer").slideToggle(); //当登录框显示，结果框隐藏
+                            $("#outer2").slideToggle(); //当登录框隐藏，结果显示
+                            $("#searchResult").html("登陆成功");
+                            $("#button1").html(data.姓名);
+                            $("#button2").html(data.学号);
+                            $("#score1 span:eq(1)").html(data.C语言);
+                            $("#score2 span:eq(1)").html(data.数据结构);
+                            $("#score3 span:eq(1)").html(data.高等数学);
+                            //==高亮不及格
+                            if ($("#score1 span:eq(1)").text() < 60) {
+                                $("#score1 span").css("color", "red");
+                            } else {
+                                $("#score1 span").css("color", "black");
+                            }
+                            if ($("#score2 span:eq(1)").text() < 60) {
+                                $("#score2 span").css("color", "red");
+                            } else {
+                                $("#score2 span").css("color", "black");
+                            }
+                            if ($("#score3 span:eq(1)").text() < 60) {
+                                $("#score3 span").css("color", "red");
+                            } else {
+                                $("#score3 span").css("color", "black");
+                            }
+                        } else {
+                            $("#searchResult").html(data.msg);
+                            $("#searchResult").css("color", "red");
+                        }
                     },
                     error: function(jqXHR) {
                         $("#searchResult").html("error" + jqXHR.status);
