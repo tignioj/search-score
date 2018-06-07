@@ -19,6 +19,7 @@
             width: 350px;
             padding-bottom: 20px;
             background-color: aliceblue;
+            display: none;
         }
         
         #logo {
@@ -146,7 +147,6 @@
     <!-- 我的js -->
     <script>
         $(document).ready(function() {
-            $("#outer2").slideUp(0); //立即隐藏查询结果表格
             $("#searchdate span").addClass("mdui-col-xs-6"); //插入Class
             $("#button").click(function() {
                 $.ajax({
